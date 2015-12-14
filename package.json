@@ -1,0 +1,23 @@
+{
+  "name": "creepster",
+  "version": "0.0.1",
+  "description": "Facial recognition and social creeping",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Daniel Sato",
+  "license": "GPL-2.0",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "bookshelf": "^0.9.1",
+    "db": "^1.0.6",
+    "express": "^4.13.3",
+    "knex": "^0.9.0",
+    "path": "^0.12.7",
+    "request": "^2.67.0",
+    "sqlite3": "^3.1.1"
+  }
+}
