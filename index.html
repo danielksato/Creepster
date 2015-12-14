@@ -1,11 +1,29 @@
 <html>
   <head>
+  <title>Creepster: Dating for Horrible People</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <script src="/client/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/client/bower_components/underscore/underscore-min.js"></script>
+  <script src="/client/bower_components/backbone/backbone-min.js"></script>
+  <script src="/client/models/user.js"></script>
+  <script src="/client/collections/users.js"></script>
+  <script src="/client/views/userView.js"></script>
+  <script src="/client/views/usersView.js"></script>
+  <script src="/client/app.js"></script>
   </head>
   <body>
     <h1>Creepster</h1>
     <form method="post">
-      <input name="url">
+      <input name="url" placeholder="URL">
+      <input name="username" placeholder="Username">
+      <!--<input type="password" name="password" placeholder="Password"!-->
+      <input type="submit" value="Submit">
     </form>
+    <script>
+    var UsersCollection = new Users();
+    var UsersView = new UsersView({collection: UsersCollection})
+    $('body').append(UsersView.render());
+    </script>
   </body>
 </html>
 

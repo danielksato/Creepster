@@ -1,0 +1,18 @@
+.user {
+  margin: 10px;
+  padding: 10px;
+  border-color: #eeeeee;
+  border-width: 3px;
+  border-style: solid;
+  width: 430px;
+  text-align: center;
+}
+
+.userpic {
+  max-height: 300px;
+  max-width: 400px;
+}
+
+.gender {
+  color: #cccccc;
+}
