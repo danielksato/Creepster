@@ -56,3 +56,24 @@ exports.addUser = function(user,callback){
     callback();
   });
 }
+
+exports.addLike = function(like,callback){
+  db.run("insert into likes (from_user, to_user, value) values ($from, $to, $val)",{
+    $from: like.fromUser,
+    $to: like.toUser,
+    $val: like.value
+  }, function(err){
+    if (err) {console.log(err)}
+    else db.all("select value from likes where to_user = $to",{$to:like.toUser},function(err,rows){
+      likeCount = 0;
+      for (var i = 0;i<rows.length;i++){
+        likeCount += rows[i].value;
+      }
+      //unclear why reduce doesn't work here. It doesn't like arrays of objects.
+      db.run("update users set likes = $val where name = $name",{
+        $val : likeCount,
+        $name : like.toUser
+      }, function(){callback()})
+    });
+  });
+}
