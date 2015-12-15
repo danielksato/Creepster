@@ -1,49 +1,58 @@
-/*var Bookshelf = require('bookshelf');
-var path = require('path');
-
-var db = Bookshelf.initialize({
-  client: 'sqlite3',
-  connection: {
-    host: '127.0.0.1',
-    user: 'your_database_user',
-    password: 'password',
-    database: 'shortlydb',
-    charset: 'utf8',
-    filename: path.join(__dirname, '../db/shortly.sqlite')
-  }
+var sqlite3 = require('sqlite3');
+var path = require('path')
+var db = new sqlite3.Database(path.join(__dirname, '../db/shortly.sqlite'), function(err){
+  if (err) console.log(err);
 });
+/* SCHEMA
+CREATE TABLE "users" ("id" integer not null primary key autoincrement,
+ "image_url" varchar(255),
+  "name" varchar(255),
+   "gender" varchar(255),
+    "likes" integer default '0',
+     "created_at" datetime,
+      "updated_at" datetime);
+CREATE UNIQUE INDEX users_name_unique on "users" ("name");
+CREATE TABLE "likes" ("id" integer not null primary key autoincrement,
+ "to_user" varchar(255),
+  "from_user" varchar(100),
+   "value" integer, "created_at" datetime,
+    "updated_at" datetime);
+CREATE TABLE "messages" ("id" integer not null primary key autoincrement,
+ "to_user" varchar(255),
+  "from_user" varchar(255),
+   "text" varchar(255),
+    "created_at" datetime,
+     "updated_at" datetime);
+*/
 
-db.knex.schema.hasTable('urls').then(function(exists) {
-  if (!exists) {
-    db.knex.schema.createTable('urls', function (link) {
-      link.increments('id').primary();
-      link.string('url', 255);
-      link.string('base_url', 255);
-      link.string('code', 100);
-      link.string('title', 255);
-      link.integer('visits');
-      link.timestamps();
-    }).then(function (table) {
-      console.log('Created Table', table);
-    });
-  }
-});
+exports.getAll = function(callback){
+  db.all('select * from users', function(err,rows){
+    if (err) {console.log(err);}
+    else {
+      callback(rows);
+    }
+  });
+}
 
-db.knex.schema.hasTable('users').then(function(exists) {
-  if (!exists) {
-    db.knex.schema.createTable('users', function (user) {
-      user.increments('id').primary();
-      user.string('username', 100).unique();
-      user.string('password', 100);
-      user.timestamps();
-    }).then(function (table) {
-      console.log('Created Table', table);
-    });
-  }
-});
-
-module.exports = db;*/
-
-exports.addUser = function(user){
-  console.log(user);
+exports.addUser = function(user,callback){
+  db.get('select * from users where name like $name',{$name:user.username},function(err,row){
+    console.log(row)
+    if (row){
+      db.run("insert into users (image_url, name, gender) values ($url, $name, $gender)",{
+        $url: user.url,
+        $name: user.username,
+        $gender: user.gender,
+        $likes: user.likes
+      }, function(err){
+        if (err) console.log(err);
+      });
+    } else {
+      db.run("update users set image_url = $url where name = $name",{
+        $url: user.url,
+        $name: user.username,
+        //We'll allow users to keep their likes even if they switch their photo.
+      })
+    }
+    callback();
+  });
 }
