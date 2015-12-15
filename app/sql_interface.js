@@ -1,6 +1,6 @@
 var sqlite3 = require('sqlite3');
 var path = require('path')
-var db = new sqlite3.Database(path.join(__dirname, '../db/shortly.sqlite'), function(err){
+var db = new sqlite3.Database(path.join(__dirname, '../db/creepster.sqlite'), function(err){
   if (err) console.log(err);
 });
 /* SCHEMA
@@ -37,8 +37,8 @@ exports.getAll = function(callback){
 exports.addUser = function(user,callback){
   db.get('select * from users where name like $name',{$name:user.username},function(err,row){
     console.log(row)
-    if (row){
-      db.run("insert into users (image_url, name, gender) values ($url, $name, $gender)",{
+    if (!row){
+      db.run("insert into users (image_url, name, gender, likes) values ($url, $name, $gender, $likes)",{
         $url: user.url,
         $name: user.username,
         $gender: user.gender,
