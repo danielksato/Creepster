@@ -38,24 +38,25 @@ app.get('/users',function(req,res){
     res.status(200);
     res.send(JSON.stringify(rows));
   });
+  console.log('fetched');
 });
 
-app.post('/likes',cookieParser(),bodyParser.urlencoded(),function(req,res){
-  //if (req.cookies.creepster_user){
-    //console.log(req.body);
+app.post('/likes',cookieParser(),bodyParser.json(),function(req,res){
+  if (req.cookies.creepster_user){
+    console.log(req.body);
     like = {
-      fromUser : req.body.fromUser,//req.cookies.creepster_user,
-      toUser : req.body.toUser,
+      fromUser : req.cookies.creepster_user,
+      toUser : req.body.name,
       value : req.body.value
     }
     db.addLike(like,function(){
       res.status(201);
       res.send('Like Received');
     });
-  // } else {
-  //   res.status(401);
-  //   res.send('Log in with a picture');
-  // }
+  } else {
+     res.status(401);
+     res.send('Log in with a picture');
+  }
 });
 
 

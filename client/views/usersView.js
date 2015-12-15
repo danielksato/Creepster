@@ -11,6 +11,7 @@ var UsersView = Backbone.View.extend({
 
   addAll: function(){
     console.log('collection :'+this.collection.length);
+    this.render();
     this.collection.forEach(this.addOne,this);
   },
 
