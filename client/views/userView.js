@@ -1,5 +1,6 @@
 var UserView = Backbone.View.extend({
   render: function(){
+    var context = this;
     var $userDiv = $('<div class="user"></div>');
     var $userSpan = $('<span class="username"></span>');
     $userSpan.text(this.model.attributes.name);
@@ -8,7 +9,6 @@ var UserView = Backbone.View.extend({
     var $genderSpan = $('<span class="gender"></span>');
     if (this.model.attributes.gender){
       $genderSpan.text(this.model.attributes.gender === 'male' ? 'Male' : 'Female');
-     // console.log(this.model.attributes.confidence)
     } else $genderSpan.text('Bad Picture or Ugly Subject');
     $attrDiv.append($genderSpan);
 
@@ -17,16 +17,15 @@ var UserView = Backbone.View.extend({
     
     var $likesDiv = $('<div class="likes"></div>');
     $likesSpan = $('<span class="likesCount"></span>');
-    $likesSpan.text(this.model.attributes.likes);
+    $likesSpan.text(this.model.attributes.likes+' Likes');
     $likesDiv.append($likesSpan)
 
     var $likesForm = $('<form class="likesForm"</form>');
-    var $plusButton = $('<input type="submit" value="1">');
-    var $minusButton = $('<input type="submit" value="-1">');
+    var $plusButton = $('<input class="voteButton" type="submit" value="+">');
+    var $minusButton = $('<input class="voteButton" type="submit" value="-">');
     $likesForm.on('click',function(event){
       event.preventDefault();
     });
-    var context = this;
     $plusButton.on('click',function(){
       context.addLike(1).then(function(){
         context.model.collection.fetch().then(function(){
@@ -42,11 +41,31 @@ var UserView = Backbone.View.extend({
       });
     });
     $likesForm.append($plusButton).append($minusButton);
+    
+    $messageDiv = $('<div class="messageDiv"></div>');
+    $messageForm = $('<form class="messageForm"></form>');
+    $messageTextBox = $('<input type="text" class="messageText '+this.model.attributes.name+'" placeholder="Send a Message"></input>');
+    //This is a hack so I can bind the event listener.
+    $messageForm.append($messageTextBox);
+    $messagePlaceHolder = $('<p class="noMessage"></p>');
+    $messagePlaceHolder.text('Messages are only for smiling users.');
+    $messageDiv.append(this.model.attributes.smiling ? $messageForm : $messagePlaceHolder);
+
+    $messageForm.on('submit',function(event){
+      event.preventDefault();
+      context.sendMessage($('.'+context.model.attributes.name).val()).then(function(){
+        context.model.collection.fetch().then(function(){
+          context.render();
+        });
+      });
+    });
+
     $userDiv.append($userSpan).append($attrDiv).append($userImg)
-      .append($likesDiv).append($likesForm);
+      .append($likesDiv).append($likesForm).append($messageDiv);
     this.$el.html($userDiv);
     return this;
   },
+
   addLike : function(n){
     return $.ajax({
       method: 'POST',
@@ -54,6 +73,18 @@ var UserView = Backbone.View.extend({
       contentType: 'application/json',
       data: JSON.stringify({value: n,
              name: this.model.attributes.name})
+    });
+  },
+
+  sendMessage: function(str){
+    return $.ajax({
+      method: 'POST',
+      url: '/messages',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        message: str,
+        toName: this.model.attributes.name
+      })
     });
   }
 });

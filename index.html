@@ -6,24 +6,59 @@
   <script src="/client/bower_components/underscore/underscore-min.js"></script>
   <script src="/client/bower_components/backbone/backbone-min.js"></script>
   <script src="/client/models/user.js"></script>
+  <script src="/client/models/message.js"></script>
   <script src="/client/collections/users.js"></script>
+  <script src="/client/collections/messages.js"></script>
   <script src="/client/views/userView.js"></script>
+  <script src="/client/views/messageView.js"></script>
   <script src="/client/views/usersView.js"></script>
-  <script src="/client/app.js"></script>
+  <script src="/client/views/messagesView.js"></script>
   </head>
   <body>
-    <h1>Creepster</h1>
-    <form method="post">
-      <input name="url" placeholder="URL">
-      <input name="username" placeholder="Username">
+    <div class="nav">
+      <h1 class="home">Creepster</h1>
+      <h3>Dating for Horrible People</h3>
+      <div class ="loginForm">
+        <form method="post">
+          <input name="url" placeholder="URL">
+          <input name="username" placeholder="Username">
       <!--<input type="password" name="password" placeholder="Password"!-->
-      <input type="submit" value="Submit">
-    </form>
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+      <div class = "navLinks">
+        <span class="messages">Messages</span>
+        <span class="logout">Log Out</span>
+      </div>
+    </div>
+    <div class="inbox">
+    <h1>Inbox</h1>
+    <script>
+    var MessagesCollection = new Messages();
+    var MessagesView = new MessagesView({collection: MessagesCollection});
+    $('.inbox').append(MessagesView.render());
+    </script>
+    </div>
+    <div class="main">
     <script>
     var UsersCollection = new Users();
-    var UsersView = new UsersView({collection: UsersCollection})
-    $('body').append(UsersView.render());
+    var UsersView = new UsersView({collection: UsersCollection});
+    $('.main').append(UsersView.render());
+    if (!document.cookie){
+      $('.navLinks').hide();
+    }
+    $('.logout').on('click',function(){
+      document.cookie = 'creepster_user=null;expires='+new Date().toUTCString();
+      window.location.href = '/';
+    })
+    $('.messages').on('click',function(){
+      if (document.cookie){
+        $('.inbox').toggle();
+      }
+    })
+
     </script>
+    </div>
   </body>
 </html>
 
