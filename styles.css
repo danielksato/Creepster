@@ -91,6 +91,10 @@ h1,h3 {
   margin-top: 3px;
 }
 
+.messageText {
+  width: 360px;
+}
+
 .nav {
   width: 100%;
   padding: 10px;
