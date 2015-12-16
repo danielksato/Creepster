@@ -66,6 +66,7 @@ app.post('/likes',cookieParser(),bodyParser.json(),function(req,res){
 
 app.post('/messages',cookieParser(),bodyParser.json(),function(req,res){
   if (req.cookies.creepster_user){
+    console.log(req.body.message);
     like = {
       fromUser : req.cookies.creepster_user,
       toUser : req.body.toName,

@@ -44,7 +44,7 @@ var UserView = Backbone.View.extend({
     
     $messageDiv = $('<div class="messageDiv"></div>');
     $messageForm = $('<form class="messageForm"></form>');
-    $messageTextBox = $('<input type="text" class="messageText '+this.model.attributes.name+'" placeholder="Send a Message"></input>');
+    $messageTextBox = $('<input type="text" class="messageText '+this.model.attributes.id+'" placeholder="Send a Message"></input>');
     //This is a hack so I can bind the event listener.
     $messageForm.append($messageTextBox);
     $messagePlaceHolder = $('<p class="noMessage"></p>');
@@ -53,7 +53,7 @@ var UserView = Backbone.View.extend({
 
     $messageForm.on('submit',function(event){
       event.preventDefault();
-      context.sendMessage($('.'+context.model.attributes.name).val()).then(function(){
+      context.sendMessage($('.'+context.model.attributes.id).val()).then(function(){
         context.model.collection.fetch().then(function(){
           context.render();
         });
@@ -77,6 +77,7 @@ var UserView = Backbone.View.extend({
   },
 
   sendMessage: function(str){
+    console.log(str);
     return $.ajax({
       method: 'POST',
       url: '/messages',
