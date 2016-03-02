@@ -2,6 +2,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = require('jquery');
 var store = require('../store/store.jsx');
+var Actions = require('../actions/actions.jsx');
+
 module.exports = React.createClass({
   delete(){
     $.ajax({

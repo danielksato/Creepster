@@ -5,11 +5,12 @@
   "main": "server.js",
   "private": true,
   "scripts": {
+    "postinstall" : "if [ ! -f db/creepster.sqlite ]; then cat app/schema | sqlite3 db/creepster.sqlite; fi",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "author": "Daniel Sato",
-  "license": "GPL-2.0",
+  "license": "GPL-3.0",
   "dependencies": {
     "babel-core": "^6.6.0",
     "babel-loader": "^6.2.4",

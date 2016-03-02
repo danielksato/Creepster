@@ -8,7 +8,6 @@ var VoteButtons = React.createClass({
   vote(e){
     e.preventDefault();
     var increment = e.target.value === '+' ? 1 : -1;
-    console.log(increment)
     $.ajax({
       method: 'POST',
       url: 'http://'+window.location.host+'/likes',
@@ -22,9 +21,8 @@ var VoteButtons = React.createClass({
     store.dispatch(Actions.VOTE(increment,this.props.index));
   },
   shouldComponentUpdate(newprops){
-    return newprops.users && newprops.users.every(user=>{
-      return user && user.likes;
-    });
+    if (newprops.index) return !!this.props.users[newprops.index];
+    else return true;
   },
   render(){
     if (this.props.username){

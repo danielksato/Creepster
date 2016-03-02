@@ -55,7 +55,9 @@ var Mailbox = React.createClass({
       return (
         <div className="inbox">
           <h1>{'Inbox'}</h1>
+          <br/>
           <span className="closeInbox" onClick={this.closeInbox}>Close</span>
+          <br/>
           {this.renderMessages()}
         </div>);
     } else return <div/>

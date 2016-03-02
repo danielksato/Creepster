@@ -1,0 +1,20 @@
+CREATE TABLE "users" ("id" integer not null primary key autoincrement,
+"image_url" varchar(255),
+"name" varchar(255),
+"gender" varchar(255),
+"smiling" integer,
+"likes" integer default '0',
+"created_at" datetime,
+"updated_at" datetime);
+CREATE UNIQUE INDEX users_name_unique on "users" ("name");
+CREATE TABLE "likes" ("id" integer not null primary key autoincrement,
+"to_user" varchar(255),
+"from_user" varchar(100),
+"value" integer, "created_at" datetime,
+"updated_at" datetime);
+CREATE TABLE "messages" ("id" integer not null primary key autoincrement,
+"to_user" varchar(255),
+"from_user" varchar(255),
+"text" varchar(255),
+"created_at" datetime,
+"updated_at" datetime);

@@ -43,7 +43,6 @@ var Header = React.createClass({
         url: this.refs.url.value
       }
     }).then(data=>{
-      console.log(data);
       store.dispatch(Actions.ADD_USER(data));
     }).fail((err)=>{
       this.logout();
@@ -62,12 +61,11 @@ var Header = React.createClass({
     };
   },
   shouldComponentUpdate(newProps){
-    console.log(newProps);
     return true;
   },
   render(){
     return (
-      <div>
+      <div className="nav">
       <h1 className="home">Creepster</h1>
       <h3>Dating for Horrible People</h3>
       {this.showLoginForm()}
