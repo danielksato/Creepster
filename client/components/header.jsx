@@ -27,7 +27,11 @@ var Header = React.createClass({
           <span className="logout" onClick={this.logout}>Log Out</span>
         </div>
       );
-    } else return <div/>;
+    } else return (
+      <span className="loginReminder">
+        Enter an image URL to vote and send messages.
+      </span>
+      );
   },
   toggleMailbox(){
     store.dispatch(Actions.TOGGLE_MAILBOX());
@@ -68,6 +72,7 @@ var Header = React.createClass({
       <div className="nav">
       <h1 className="home">Creepster</h1>
       <h3>Dating for Horrible People</h3>
+      <h5>{this.props.username || ''}</h5>
       {this.showLoginForm()}
       {this.showNavLinks()}
       </div>
