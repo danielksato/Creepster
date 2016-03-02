@@ -21,6 +21,7 @@ var VoteButtons = React.createClass({
     store.dispatch(Actions.VOTE(increment,this.props.index));
   },
   shouldComponentUpdate(newprops){
+    if (!this.props.users) return false;
     if (newprops.index) return !!this.props.users[newprops.index];
     else return true;
   },

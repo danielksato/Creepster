@@ -37,7 +37,8 @@ var UsersDiv = React.createClass({
   shouldComponentUpdate(newprops){
     if (newprops.users && this.props.users){
       return !newprops.users.every((user,index)=>{
-        return user.id === this.props.users[index].id;
+        return this.props.users[index] && 
+          user.id === this.props.users[index].id;
       });
     };
     return true;
