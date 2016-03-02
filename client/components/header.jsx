@@ -28,9 +28,11 @@ var Header = React.createClass({
         </div>
       );
     } else return (
-      <span className="loginReminder">
-        Enter an image URL to vote and send messages.
-      </span>
+      <div className = "navLinks">
+        <span className="loginReminder">
+          Enter an image URL to vote and send messages.
+        </span>
+      </div>
       );
   },
   toggleMailbox(){
