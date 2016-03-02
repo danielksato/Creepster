@@ -5,7 +5,7 @@
   "main": "server.js",
   "private": true,
   "scripts": {
-    "postinstall" : "if [ ! -f db/creepster.sqlite ]; then cat app/schema | sqlite3 db/creepster.sqlite; fi",
+    "postinstall": "if [ ! -f db/creepster.sqlite ]; then cat app/schema | sqlite3 db/creepster.sqlite; fi",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
   },
