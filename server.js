@@ -4,7 +4,16 @@ var cookieParser = require('cookie-parser');
 var request = require('request');
 var sky = require('./app/sky_api.js');
 var db = require('./app/sql_interface.js');
+var config = require('./webpack.config.js');
+var webpack = require('webpack');
+var compiler = webpack(config);
+var webpackMiddleware = require('webpack-dev-middleware');
+var webpackHotMiddleware = require('webpack-hot-middleware');
+
 var app = express();
+
+app.use(webpackMiddleware(compiler));
+app.use(webpackHotMiddleware(compiler));
 
 app.post('/',bodyParser.urlencoded(),function(req,res){
   request(req.body.url, function(err){
@@ -27,9 +36,15 @@ app.post('/',bodyParser.urlencoded(),function(req,res){
                     likes: gender ? 0 : -1,
                     smiling: smiling
                   },function(){
-          res.status(201);
           res.set({'Set-Cookie':'creepster_user='+req.body.username});
-          res.sendFile(__dirname+'/index.html');
+          res.json({
+            gender: gender,
+            id: new Date().getTime(),
+            image_url: req.body.url,
+            likes: gender ? 0 : -1,
+            name: req.body.username,
+            smiling: smiling ? 1 : 0
+          });
         });
       });
     } else {
@@ -43,17 +58,17 @@ app.get('/users',function(req,res){
   db.getAll(function(rows){
     res.set('Content-Type','application/json');
     res.status(200);
-    res.send(JSON.stringify(rows));
+    res.send(JSON.stringify(rows.reverse()));
   });
 });
 
-app.post('/likes',cookieParser(),bodyParser.json(),function(req,res){
+app.post('/likes',cookieParser(),bodyParser.urlencoded(),function(req,res){
   if (req.cookies.creepster_user){
     like = {
       fromUser : req.cookies.creepster_user,
       toUser : req.body.name,
       value : req.body.value
-    }
+    };
     db.addLike(like,function(){
       res.status(201);
       res.send('Like Received');
@@ -64,9 +79,8 @@ app.post('/likes',cookieParser(),bodyParser.json(),function(req,res){
   }
 });
 
-app.post('/messages',cookieParser(),bodyParser.json(),function(req,res){
+app.post('/messages',cookieParser(),bodyParser.urlencoded(),function(req,res){
   if (req.cookies.creepster_user){
-    console.log(req.body.message);
     like = {
       fromUser : req.cookies.creepster_user,
       toUser : req.body.toName,
@@ -93,7 +107,7 @@ app.get('/messages',cookieParser(),function(req,res){
   else res.redirect('/');
 });
 
-app.post('/messages/delete',cookieParser(),bodyParser.json(),function(req,res){
+app.post('/messages/delete',cookieParser(),bodyParser.urlencoded(),function(req,res){
   if (req.cookies.creepster_user){
     db.deleteMessage(req.body.id,function(){
       res.status(201);

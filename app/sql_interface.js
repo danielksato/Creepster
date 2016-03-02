@@ -68,7 +68,7 @@ exports.addLike = function(like,callback){
     if (err) {console.log(err)}
     else db.all("select value from likes where to_user = $to",{$to:like.toUser},function(err,rows){
       db.run("update users set likes = $val where name = $name",{
-        $val : rows.reduce(function(x,y){return {value:x.value+y.value}}).value,
+        $val : rows.reduce(function(x,y){return {value:x.value+y.value}},{value:0}).value,
         $name : like.toUser
       }, function(){callback()})
     });
